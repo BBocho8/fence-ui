@@ -10,18 +10,22 @@ function loadComponent(path, targetId, callback) {
 // Initial load
 window.addEventListener("DOMContentLoaded", () => {
 	loadComponent("components/sidebar.html", "sidebar", () => {
-		// Wait for sidebar to be loaded, then set Home as active
-		const homeLink = document.querySelector('[data-tab="content1"]');
+		// Inline all SVG icons
+		inlineAllSidebarSvgs();
+
+		// Set initial active tab to wiki-content
+		const homeLink = document.querySelector('[data-tab="wiki-content"]');
 		if (homeLink) homeLink.classList.add("active");
 	});
 
-	loadComponent("components/content1.html", "main-content");
+	loadComponent("components/wiki-content.html", "main-content");
 });
 
 // Handle tab click (sidebar)
 document.addEventListener("click", (e) => {
-	if (e.target.matches("[data-tab]")) {
-		const tab = e.target.getAttribute("data-tab");
+	const tabLink = e.target.closest("[data-tab]");
+	if (tabLink) {
+		const tab = tabLink.getAttribute("data-tab");
 
 		// Remove active class from all sidebar links
 		for (const el of document.querySelectorAll(".sidebar a")) {
@@ -29,7 +33,7 @@ document.addEventListener("click", (e) => {
 		}
 
 		// Add active class to clicked link
-		e.target.classList.add("active");
+		tabLink.classList.add("active");
 
 		const isStyleguide = tab === "styleguide";
 		loadComponent(
@@ -40,7 +44,7 @@ document.addEventListener("click", (e) => {
 	}
 });
 
-// Handle tabs toggle
+// Handle tabs toggle inside content
 document.addEventListener("click", (e) => {
 	if (e.target.closest(".tab-item")) {
 		for (const tab of document.querySelectorAll(".tab-item")) {
@@ -73,5 +77,29 @@ function loadColors() {
       <h6>${color.hex}</h6>
     `;
 		container.appendChild(div);
+	}
+}
+
+function inlineAllSidebarSvgs() {
+	const icons = document.querySelectorAll('.sidebar-item img[src$=".svg"]');
+	for (const img of icons) {
+		fetch(img.src)
+			.then((res) => res.text())
+			.then((svgText) => {
+				const wrapper = document.createElement("div");
+				wrapper.innerHTML = svgText;
+				const svg = wrapper.querySelector("svg");
+				if (!svg) return;
+
+				svg.classList.add("sidebar-icon");
+				svg.setAttribute("width", "43");
+				svg.setAttribute("height", "43");
+				svg.setAttribute("fill", "currentColor");
+
+				img.replaceWith(svg);
+			})
+			.catch((err) => {
+				console.warn("Failed to inline SVG:", img.src, err);
+			});
 	}
 }
