@@ -1,46 +1,75 @@
 function loadComponent(path, targetId, callback) {
 	fetch(path)
-		.then((res) => res.text())
+		.then((res) => {
+			if (!res.ok) throw new Error(`Failed to load ${path}`);
+			return res.text();
+		})
 		.then((html) => {
-			document.getElementById(targetId).innerHTML = html;
+			const target = document.getElementById(targetId);
+			if (!target) {
+				console.warn(
+					`Target element #${targetId} not found when loading ${path}`,
+				);
+				return;
+			}
+			target.innerHTML = html;
 			if (callback) callback();
+		})
+		.catch((err) => {
+			console.error(err);
 		});
 }
 
 // Initial load
 window.addEventListener("DOMContentLoaded", () => {
 	loadComponent("components/sidebar.html", "sidebar", () => {
-		// Inline all SVG icons
 		inlineAllSidebarSvgs();
 
-		// Set initial active tab to wiki-content
-		const homeLink = document.querySelector('[data-tab="wiki-content"]');
+		// Set default tab
+		const homeLink = document.querySelector('[data-tab="planungen-content"]');
 		if (homeLink) homeLink.classList.add("active");
 	});
 
-	loadComponent("components/wiki-content.html", "main-content");
+	loadComponent("components/planungen-content.html", "main-content");
 });
 
-// Handle tab click (sidebar)
+// Handle sidebar tab click
 document.addEventListener("click", (e) => {
-	const tabLink = e.target.closest("[data-tab]");
+	const tabLink = e.target.closest("[data-sidebar-tab]");
 	if (tabLink) {
-		const tab = tabLink.getAttribute("data-tab");
+		const tab = tabLink.getAttribute("data-sidebar-tab");
 
 		// Remove active class from all sidebar links
 		for (const el of document.querySelectorAll(".sidebar a")) {
 			el.classList.remove("active");
 		}
-
-		// Add active class to clicked link
 		tabLink.classList.add("active");
 
-		const isStyleguide = tab === "styleguide";
-		loadComponent(
-			`components/${tab}.html`,
-			"main-content",
-			isStyleguide ? loadColors : null,
-		);
+		if (tab === "planungen-content") {
+			loadComponent("components/planungen-content.html", "main-content", () => {
+				// Wait a tiny bit longer to ensure #planungen-tab-content is in the DOM
+				setTimeout(() => {
+					const tabContainer = document.getElementById("planungen-tab-content");
+					if (tabContainer) {
+						loadComponent(
+							"components/planungen/ubersicht.html",
+							"planungen-tab-content",
+						);
+					} else {
+						console.warn(
+							"#planungen-tab-content not found after loading main content",
+						);
+					}
+				}, 50); // ~1 frame at 60fps
+			});
+		} else {
+			const isStyleguide = tab === "styleguide";
+			loadComponent(
+				`components/${tab}.html`,
+				"main-content",
+				isStyleguide ? loadColors : null,
+			);
+		}
 	}
 });
 
@@ -103,3 +132,49 @@ function inlineAllSidebarSvgs() {
 			});
 	}
 }
+
+// Handle Öffnen button click
+document.addEventListener("click", (e) => {
+	const btn = e.target.closest(".planung-open-btn");
+	if (btn) {
+		const path = btn.getAttribute("data-path");
+		if (path) {
+			loadComponent(path, "main-content", () => {
+				// Wait for the new DOM to be in place before loading tab content
+				requestAnimationFrame(() => {
+					loadComponent(
+						"components/planungen/ubersicht.html",
+						"planungen-tab-content",
+					);
+				});
+			});
+		}
+	}
+});
+
+// Handle planungen detailed page tab click
+document.addEventListener("click", (e) => {
+	const tab = e.target.closest(".planungen-tabs-item");
+	if (tab) {
+		const selected = tab.getAttribute("data-tab");
+
+		const container = document.getElementById("planungen-tab-content");
+		if (!container) {
+			console.warn(
+				"Cannot load tab content: #planungen-tab-content is missing",
+			);
+			return;
+		}
+
+		// Toggle active
+		for (const el of document.querySelectorAll(".planungen-tabs-item")) {
+			el.classList.remove("active");
+		}
+		tab.classList.add("active");
+
+		loadComponent(
+			`components/planungen/${selected}.html`,
+			"planungen-tab-content",
+		);
+	}
+});
