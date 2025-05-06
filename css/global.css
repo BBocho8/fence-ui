@@ -24,13 +24,23 @@ html {
 	color: var(--color-primary);
 }
 
+body.karte-active main {
+	background-color: transparent;
+}
+
+/* MAIN CONTENT */
 main {
+	flex: 1;
+	padding: 2rem;
+	background-color: #f4f4f4;
 	overflow-y: auto;
 }
 
 .layout {
-	height: 100vh;
 	display: flex;
+	height: 100vh;
+	width: 100vw;
+	position: relative;
 }
 
 /* TYPOGRAPHY */
@@ -97,10 +107,22 @@ a:hover {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	background-color: var(--color-primary);
+	background-color: var(--color-primary); /* default opaque */
 	color: var(--color-white);
 	padding: 1rem 0;
 	font-family: "Bebas Neue", sans-serif;
+	transition: background-color 0.3s ease;
+}
+
+body.karte-active .sidebar {
+	background-color: transparent;
+}
+
+body.karte-active .layout {
+	background-image: url("/assets/karte.png"); /* adjust path */
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .sidebar ul {
@@ -146,13 +168,6 @@ a:hover {
 	width: 43px;
 	height: 43px;
 	fill: currentColor;
-}
-
-/* MAIN CONTENT */
-main {
-	flex: 1;
-	padding: 2rem;
-	background-color: #f4f4f4;
 }
 
 /* UTILITIES */
@@ -527,4 +542,62 @@ td.table-name {
 	font-family: "Bebas Neue", sans-serif;
 	font-size: 25px;
 	color: var(--color-primary);
+}
+
+/* KARTE TAB */
+
+/* Buttons absolutely placed */
+.karte-btn {
+	position: absolute;
+	background-color: var(--color-white);
+	color: var(--color-primary);
+	border: none;
+	padding: 6px 10px;
+	font-weight: bold;
+	border-radius: 4px;
+	cursor: pointer;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Example positions */
+.karte-btn.top-left {
+	top: 16px;
+	left: 180px; /* adjust based on sidebar */
+}
+
+.karte-btn.top-right {
+	top: 16px;
+	right: 16px;
+}
+
+.karte-footer {
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: var(--color-primary);
+	padding: 16px 12px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 50px;
+}
+
+.karte-footer-text {
+	font-family: "Bebas Neue", sans-serif;
+	font-size: 25px;
+	color: white;
+}
+
+.karte-footer-icon {
+	cursor: pointer;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 16;
+	height: 12;
+	padding: 8px;
+	border: 2px solid white;
+	font-weight: bold;
 }

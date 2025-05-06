@@ -1,24 +1,7 @@
-function loadComponent(path, targetId, callback) {
-	fetch(path)
-		.then((res) => {
-			if (!res.ok) throw new Error(`Failed to load ${path}`);
-			return res.text();
-		})
-		.then((html) => {
-			const target = document.getElementById(targetId);
-			if (!target) {
-				console.warn(
-					`Target element #${targetId} not found when loading ${path}`,
-				);
-				return;
-			}
-			target.innerHTML = html;
-			if (callback) callback();
-		})
-		.catch((err) => {
-			console.error(err);
-		});
-}
+import { initKarteViewSwitcher } from "./update-view.js";
+import { loadComponent } from "./load-component.js";
+import { loadColors } from "./load-colors.js";
+import { inlineAllSidebarSvgs } from "./inline-svgs.js";
 
 // Initial load
 window.addEventListener("DOMContentLoaded", () => {
@@ -26,11 +9,17 @@ window.addEventListener("DOMContentLoaded", () => {
 		inlineAllSidebarSvgs();
 
 		// Set default tab
-		const homeLink = document.querySelector('[data-tab="planungen-content"]');
+		// Remove following line if you want to change default tab
+		document.body.classList.add("karte-active");
+		const homeLink = document.querySelector(
+			'[data-sidebar-tab="karte-content"]',
+		);
 		if (homeLink) homeLink.classList.add("active");
 	});
 
-	loadComponent("components/planungen-content.html", "main-content");
+	loadComponent("components/karte-content.html", "main-content", () => {
+		initKarteViewSwitcher();
+	});
 });
 
 // Handle sidebar tab click
@@ -45,24 +34,34 @@ document.addEventListener("click", (e) => {
 		}
 		tabLink.classList.add("active");
 
-		if (tab === "planungen-content") {
+		if (tab === "karte-content") {
+			document.body.classList.add("karte-active");
+
+			loadComponent("components/karte-content.html", "main-content", () => {
+				initKarteViewSwitcher(); // ✅ re-initialize logic after every load
+			});
+		} else if (tab === "planungen-content") {
+			document.body.classList.remove("karte-active");
+
 			loadComponent("components/planungen-content.html", "main-content", () => {
-				// Wait a tiny bit longer to ensure #planungen-tab-content is in the DOM
-				setTimeout(() => {
+				const observer = new MutationObserver((mutations, obs) => {
 					const tabContainer = document.getElementById("planungen-tab-content");
 					if (tabContainer) {
 						loadComponent(
 							"components/planungen/ubersicht.html",
 							"planungen-tab-content",
 						);
-					} else {
-						console.warn(
-							"#planungen-tab-content not found after loading main content",
-						);
+						obs.disconnect();
 					}
-				}, 50); // ~1 frame at 60fps
+				});
+				observer.observe(document.getElementById("main-content"), {
+					childList: true,
+					subtree: true,
+				});
 			});
 		} else {
+			document.body.classList.remove("karte-active");
+
 			const isStyleguide = tab === "styleguide";
 			loadComponent(
 				`components/${tab}.html`,
@@ -82,56 +81,6 @@ document.addEventListener("click", (e) => {
 		e.target.closest(".tab-item").classList.add("active");
 	}
 });
-
-// Color block generator (called after styleguide is loaded)
-function loadColors() {
-	const colors = [
-		{ name: "Primary", var: "--color-primary", hex: "#042130" },
-		{ name: "Secondary", var: "--color-secondary", hex: "#38F09A" },
-		{ name: "White", var: "--color-white", hex: "#FFFFFF" },
-		{ name: "Warning", var: "--color-warning", hex: "#F0ED38" },
-		{ name: "Error", var: "--color-error", hex: "#FD0000" },
-	];
-
-	const container = document.getElementById("color-palette");
-	if (!container) return;
-
-	container.innerHTML = "";
-	for (const color of colors) {
-		const div = document.createElement("div");
-		div.className = "color-sample";
-		div.innerHTML = `
-      <div class="color-box" style="background-color: var(${color.var}); "></div>
-      <h6>${color.name}</h6>
-      <h6>${color.hex}</h6>
-    `;
-		container.appendChild(div);
-	}
-}
-
-function inlineAllSidebarSvgs() {
-	const icons = document.querySelectorAll('.sidebar-item img[src$=".svg"]');
-	for (const img of icons) {
-		fetch(img.src)
-			.then((res) => res.text())
-			.then((svgText) => {
-				const wrapper = document.createElement("div");
-				wrapper.innerHTML = svgText;
-				const svg = wrapper.querySelector("svg");
-				if (!svg) return;
-
-				svg.classList.add("sidebar-icon");
-				svg.setAttribute("width", "43");
-				svg.setAttribute("height", "43");
-				svg.setAttribute("fill", "currentColor");
-
-				img.replaceWith(svg);
-			})
-			.catch((err) => {
-				console.warn("Failed to inline SVG:", img.src, err);
-			});
-	}
-}
 
 // Handle Öffnen button click
 document.addEventListener("click", (e) => {
