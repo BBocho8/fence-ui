@@ -8,17 +8,14 @@ window.addEventListener("DOMContentLoaded", () => {
 	loadComponent("components/sidebar.html", "sidebar", () => {
 		inlineAllSidebarSvgs();
 
-		// Set default tab
-		// Remove following line if you want to change default tab
-		document.body.classList.add("karte-active");
 		const homeLink = document.querySelector(
-			'[data-sidebar-tab="karte-content"]',
+			'[data-sidebar-tab="sperrobjekte-content"]',
 		);
 		if (homeLink) homeLink.classList.add("active");
 	});
 
-	loadComponent("components/karte-content.html", "main-content", () => {
-		initKarteViewSwitcher();
+	loadComponent("components/sperrobjekte-content.html", "main-content", () => {
+		handleSperrobjekteTabClick("geplant");
 	});
 });
 
@@ -59,6 +56,17 @@ document.addEventListener("click", (e) => {
 					subtree: true,
 				});
 			});
+		} else if (tab === "sperrobjekte-content") {
+			document.body.classList.remove("karte-active");
+
+			loadComponent(
+				"components/sperrobjekte-content.html",
+				"main-content",
+				() => {
+					// ✅ Auto-load the default table again
+					handleSperrobjekteTabClick("geplant");
+				},
+			);
 		} else {
 			document.body.classList.remove("karte-active");
 
@@ -125,5 +133,44 @@ document.addEventListener("click", (e) => {
 			`components/planungen/${selected}.html`,
 			"planungen-tab-content",
 		);
+	}
+});
+
+const sperrTabMap = {
+	geplant: "components/sperrobjekte/tables/geplant.html",
+	erkBeauftragt: "components/sperrobjekte/tables/erk-beauftragt.html",
+	erkAbgeschlossen: "components/sperrobjekte/tables/erk-abgeschlossen.html",
+	freigegeben: "components/sperrobjekte/tables/freigegeben.html",
+	sperrenlegungen: "components/sperrobjekte/tables/sperrenlegungen.html",
+};
+
+function handleSperrobjekteTabClick(tabKey) {
+	const container = document.getElementById("sperrobjekte-table-container");
+	if (!container) {
+		console.warn("Missing container #sperrobjekte-table-container");
+		return;
+	}
+	const path = sperrTabMap[tabKey];
+	if (!path) return;
+	loadComponent(path, "sperrobjekte-table-container");
+}
+
+document.addEventListener("click", (e) => {
+	const tab = e.target.closest("[data-sperr-tab]");
+	if (tab) {
+		// Toggle active
+		for (const el of document.querySelectorAll("[data-sperr-tab]")) {
+			el.classList.remove("active");
+		}
+		tab.classList.add("active");
+
+		handleSperrobjekteTabClick(tab.getAttribute("data-sperr-tab"));
+	}
+});
+
+// Optional: auto-load default tab on DOMContentLoaded
+window.addEventListener("DOMContentLoaded", () => {
+	if (document.querySelector(`[data-sperr-tab="geplant"]`)) {
+		handleSperrobjekteTabClick("geplant");
 	}
 });

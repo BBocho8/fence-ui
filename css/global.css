@@ -282,13 +282,13 @@ select:focus {
 
 /* ACTIVE TAB NUMBER */
 .tab-item.active .tab-count {
-	background-color: var(--color-secondary);
+	/* background-color: var(--color-secondary); */
 	color: var(--color-primary);
 }
 
 /* INACTIVE TAB NUMBER */
 .tab-item:not(.active) .tab-count {
-	background-color: #e0e0e0;
+	/* background-color: #e0e0e0; */
 	color: #888;
 }
 
@@ -549,25 +549,40 @@ td.table-name {
 /* Buttons absolutely placed */
 .karte-btn {
 	position: absolute;
-	background-color: var(--color-white);
-	color: var(--color-primary);
-	border: none;
-	padding: 6px 10px;
-	font-weight: bold;
-	border-radius: 4px;
-	cursor: pointer;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Example positions */
 .karte-btn.top-left {
-	top: 16px;
-	left: 180px; /* adjust based on sidebar */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 24px;
+	top: 32px;
+	left: 180px;
 }
 
 .karte-btn.top-right {
-	top: 16px;
-	right: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	top: 32px;
+	right: 32px;
+}
+
+.karte-item {
+	width: 40px;
+	height: 40px;
+	padding: 5px;
+	border: 2px solid var(--color-white);
+	cursor: pointer;
+}
+
+.karte-item-text {
+	font-family: "PT Sans", sans-serif;
+	font-size: 18px;
+	color: var(--color-white);
+	font-weight: 700;
+	cursor: pointer;
 }
 
 .karte-footer {
@@ -599,5 +614,145 @@ td.table-name {
 	height: 12;
 	padding: 8px;
 	border: 2px solid white;
+	font-weight: bold;
+}
+
+/* SPERROBJEKTE */
+
+.sperrobjekte-content {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+.sperrobjekte-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.sperrobjekte-title {
+	font-size: 45px;
+	font-family: "Bebas Neue", sans-serif;
+}
+
+.sperr-filter-search-container {
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	gap: 16px;
+}
+.sperr-filter {
+	font-family: "PT Sans", sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.search-container {
+	position: relative;
+	width: 220px;
+}
+
+.search-input {
+	width: 100%;
+	padding: 10px 35px 10px 12px; /* space for icon on the right */
+	border: 2px solid #042130;
+	font-size: 16px;
+	color: #042130;
+	font-weight: bold;
+	box-sizing: border-box;
+}
+
+.search-input::placeholder {
+	color: #042130;
+	opacity: 0.7;
+	font-weight: bold;
+}
+
+.search-icon {
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #042130;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.sperren-obj-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-family: sans-serif;
+	margin-top: 20px;
+}
+
+.sperren-obj-table td:nth-child(4),
+.sperren-obj-table th:nth-child(4),
+.sperren-obj-table td:nth-child(5),
+.sperren-obj-table th:nth-child(5) {
+	width: 1%;
+	white-space: nowrap;
+}
+
+.sperren-obj-table th {
+	text-align: left;
+	border-bottom: 4px solid #042130;
+	padding: 12px 8px;
+	font-size: 30px;
+	font-family: "Bebas Neue", sans-serif;
+}
+
+.sperren-obj-table td {
+	padding: 12px 8px;
+	border-bottom: 4px solid #d1d5db; /* light gray */
+	font-family: "PT Sans", sans-serif;
+	font-size: 20px;
+}
+
+.sperren-obj-table td.table-name {
+	font-family: "Bebas Neue", sans-serif;
+	font-size: 25px;
+	color: var(--color-primary);
+}
+
+.custom-checkbox {
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	width: 30px;
+	height: 30px;
+}
+
+.custom-checkbox input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+	position: absolute;
+}
+
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: 30px;
+	border: 2px solid #042130; /* Dark border */
+	border-radius: 4px;
+	background-color: white;
+	box-sizing: border-box;
+}
+
+.custom-checkbox input:checked + .checkmark {
+	background-color: #38f09a; /* Bright green background when checked */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.custom-checkbox input:checked + .checkmark::after {
+	content: "✔";
+	color: #042130;
+	font-size: 18px;
 	font-weight: bold;
 }

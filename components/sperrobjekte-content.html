@@ -1,4 +1,45 @@
-<section>
-	<h1>SPERROBJEKTE</h1>
-	<p>Style Guidelines - <strong>PNG Image</strong></p>
+<section class="planungen-content">
+	<div class="planungen-header">
+		<span class="planungen-title">SPERROBJEKTE</span>
+	</div>
+
+	<div class="sperr-filter-search-container">
+		<div class="search-container">
+			<input type="text" placeholder="Suchen..." class="search-input" />
+			<img src="assets/icons/search.svg" class="search-icon" alt="Search" />
+		</div>
+		<p class="sperr-filter">+ Filter hinzufügen</p>
+	</div>
+
+	<div class="tab-group">
+		<div class="tab-item active" data-sperr-tab="geplant">
+			Geplant<span class="tab-count" style="background-color: #9cadf8">9</span>
+		</div>
+		<div class="tab-item" data-sperr-tab="erkBeauftragt">
+			Erkundung beauftragt<span
+				class="tab-count"
+				style="background-color: #f6f488"
+				>7</span
+			>
+		</div>
+		<div class="tab-item" data-sperr-tab="erkAbgeschlossen">
+			Erkundung abgeschlossen<span
+				class="tab-count"
+				style="background-color: #e6a8f7"
+				>7</span
+			>
+		</div>
+		<div class="tab-item" data-sperr-tab="freigegeben">
+			Freigegeben<span class="tab-count" style="background-color: #9cf8cd"
+				>3</span
+			>
+		</div>
+		<div class="tab-item" data-sperr-tab="sperrenlegungen">
+			Sperrenlegungen<span class="tab-count" style="background-color: #d9d9d9"
+				>1</span
+			>
+		</div>
+	</div>
+
+	<div id="sperrobjekte-table-container"></div>
 </section>
