@@ -69,8 +69,7 @@ document.addEventListener("click", (e) => {
 			);
 		} else {
 			document.body.classList.remove("karte-active");
-
-			const isStyleguide = tab === "styleguide";
+			const isStyleguide = tab === "appauswahl-content";
 			loadComponent(
 				`components/${tab}.html`,
 				"main-content",

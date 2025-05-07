@@ -1,0 +1,213 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+:root {
+	--color-primary: #042130;
+	--color-secondary: #38f09a;
+	--color-white: #ffffff;
+	--color-warning: #f0ed38;
+	--color-error: #fd0000;
+}
+
+body {
+	font-family: "PT Sans", sans-serif;
+}
+
+/* TYPOGRAPHY */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Bebas Neue", sans-serif;
+}
+
+h1 {
+	font-size: 40px;
+	margin: 1rem 0 0.5rem;
+}
+
+h2 {
+	font-size: 35px;
+	margin: 1rem 0 0.5rem;
+}
+
+h3 {
+	font-size: 25px;
+	margin: 1rem 0 0.5rem;
+	color: #4f646e;
+}
+
+h4 {
+	font-size: 22px;
+	margin: 1rem 0 0.5rem;
+}
+
+h5 {
+	font-size: 18px;
+	margin: 1rem 0 0.5rem;
+}
+
+h6 {
+	font-size: 15px;
+	margin: 1rem 0 0.5rem;
+	color: #4f646e;
+}
+
+p {
+	font-size: 15px;
+	margin: 0.5rem 0;
+}
+
+a {
+	color: var(--color-secondary);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+/* UTILITIES */
+.warning-text {
+	color: var(--color-warning);
+}
+
+.error-border {
+	border: 1px solid var(--color-error);
+}
+
+/* BUTTONS */
+.btn-default {
+	background-color: transparent;
+	color: var(--color-primary);
+	border: 2px solid var(--color-primary);
+	padding: 0.75rem 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.btn-default:hover {
+	background-color: var(--color-white);
+	color: var(--color-primary);
+	border-color: var(--color-primary);
+	opacity: 0.9;
+}
+
+.btn-primary {
+	background-color: var(--color-primary);
+	color: var(--color-white);
+	border: none;
+	padding: 0.75rem 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.btn-primary:hover {
+	background-color: #5a6b77;
+}
+
+.btn-secondary {
+	background-color: var(--color-secondary);
+	color: var(--color-primary);
+	border: none;
+	padding: 0.75rem 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.btn-secondary:hover {
+	background-color: #66f4b0;
+}
+
+/* INPUTS & SELECT */
+input,
+select {
+	border: 2px solid var(--color-primary);
+	padding: 0.5rem;
+	font-size: 1rem;
+	width: 200px;
+	color: var(--color-primary);
+	outline: none;
+	background-color: var(--color-white);
+}
+
+input:focus,
+select:focus {
+	border-color: var(--color-secondary);
+}
+
+/* TAB GROUP */
+.tab-group {
+	display: flex;
+	gap: 2rem;
+}
+
+/* TAB ITEM */
+.tab-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	font-weight: bold;
+}
+
+/* ACTIVE TAB */
+.tab-item.active {
+	color: var(--color-primary);
+	border-bottom-color: var(--color-primary);
+	padding: 0 0.5rem;
+	padding-bottom: 10px;
+}
+
+/* INACTIVE TAB */
+.tab-item:not(.active) {
+	color: #888;
+	padding-bottom: 10px;
+}
+
+/* NUMBER BADGE */
+.tab-count {
+	font-size: 0.9rem;
+	padding: 0.5rem 0.5rem;
+	border-radius: 5px;
+}
+
+/* ACTIVE TAB NUMBER */
+.tab-item.active .tab-count {
+	background-color: var(--color-secondary);
+	color: var(--color-primary);
+}
+
+/* INACTIVE TAB NUMBER */
+.tab-item:not(.active) .tab-count {
+	background-color: #e0e0e0;
+	color: #888;
+}
+
+.color-box {
+	width: 80px;
+	height: 80px;
+	border: 3px solid var(--color-primary);
+	background-color: var(--color-primary);
+}
+
+.color-sample {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.3rem;
+	margin-bottom: 1rem;
+}
+
+.color-sample h6 {
+	margin: 0;
+	color: var(--color-primary);
+	font-family: "PT Sans", sans-serif;
+	font-size: 0.9rem;
+}
